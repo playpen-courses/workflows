@@ -1,1 +1,31 @@
 name: Reusable Workflow
+
+on:
+    workflow_call:
+        inputs:
+            name:
+                description: name
+                type: string
+                default: Hello Abadi
+        secrets:
+            access_token:
+                description: Access Token
+                required: true
+
+jobs:
+    checkout:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - run: ls -a
+    logs-contexts-and-inputs:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Display Github Context
+              run: echo '${{toJson(github)}}'
+            - name: Display Inputs
+              run: echo '${{inputs.name}}'
+            - name: Display Secrets
+              run: echo '${{secrets.access_token}}'
+
+
