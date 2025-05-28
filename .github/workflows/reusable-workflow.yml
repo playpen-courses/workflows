@@ -11,6 +11,10 @@ on:
             access_token:
                 description: Access Token
                 required: true
+        outputs:
+            greeting:
+                description: Greeting Message
+                value: ${{jobs.logs-contexts-and-inputs.outputs.greeting}}
 
 jobs:
     checkout:
@@ -20,6 +24,8 @@ jobs:
             - run: ls -a
     logs-contexts-and-inputs:
         runs-on: ubuntu-latest
+        outputs:
+            greeting: ${{steps.output.outputs.greeting}}
         steps:
             - name: Display Github Context
               run: echo '${{toJson(github)}}'
@@ -27,5 +33,10 @@ jobs:
               run: echo '${{inputs.name}}'
             - name: Display Secrets
               run: echo '${{secrets.access_token}}'
+            - name: Generate outputs
+              id: output
+              env:
+                NAME: ${{inputs.name}}
+              run: echo "greeting=Hello $NAME" >> $GITHUB_OUTPUT
 
 
